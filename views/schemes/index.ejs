@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Schemes</title>
+  <style>
+    /* --- General Page Styling --- */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8fafc;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* --- Navbar --- */
+    header {
+      background: #0077b6;
+      color: white;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    nav {
+      width: 90%;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav h2 {
+      margin: 0;
+      font-size: 1.6em;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #caf0f8;
+    }
+
+    /* --- Main Container --- */
+    .container {
+      width: 90%;
+      margin: 40px auto;
+    }
+
+    h1 {
+      color: #023e8a;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    /* --- Card Grid --- */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    /* --- Individual Card --- */
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      color: #0077b6;
+      margin-top: 0;
+    }
+
+    .card p {
+      color: #333;
+      line-height: 1.5;
+      margin: 10px 0;
+    }
+
+    .card .benefit {
+      color: #0096c7;
+      font-weight: bold;
+    }
+
+    .card a {
+      text-decoration: none;
+      background: #0077b6;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 10px;
+      align-self: flex-start;
+      transition: background 0.3s ease;
+    }
+
+    .card a:hover {
+      background: #023e8a;
+    }
+
+    /* --- Buttons (Edit/Delete) --- */
+    .action-buttons {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .edit-btn {
+      background: #0096c7;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: white;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .edit-btn:hover {
+      background: #0077b6;
+    }
+
+    .delete-btn {
+      background: #d62828;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .delete-btn:hover {
+      background: #a4161a;
+    }
+
+    /* --- Footer --- */
+    footer {
+      background: #0077b6;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+
+    /* --- Add Button --- */
+    .add-scheme {
+      display: block;
+      width: fit-content;
+      margin: 0 auto 30px auto;
+      background: #0096c7;
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .add-scheme:hover {
+      background: #0077b6;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Header Navigation -->
+  <header>
+    <nav>
+      <h2>Medical Schemes Portal</h2>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/schemes/about">About Us</a>
+        <a href="/schemes/contact">Contact Us</a>
+        <a href="/schemes">Schemes</a>
+        <div style="text-align:center; margin-bottom:20px;">
+        <a href="/schemes/add" style="background:#0077b6;color:white;padding:10px 15px;border-radius:8px;text-decoration:none;">+ Add New Scheme</a>
+</div>
+
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>All Medical Schemes</h1>
+
+    <!-- Add New Scheme Button -->
+    <a href="/schemes/new" class="add-scheme">+ Add New Scheme</a>
+
+    <div class="card-grid">
+      <% listings.forEach(scheme => { %>
+        <div class="card">
+          <h3><%= scheme.title %></h3>
+          <p><%= scheme.description %></p>
+          <p class="benefit">Benefit: <%= scheme.benefitAmount %></p>
+          
+          <% if (scheme.infoLink) { %>
+            <a href="<%= scheme.infoLink %>" target="_blank">More Info</a>
+          <% } %>
+
+          <form action="/schemes/delete/<%= scheme._id %>" method="POST" class="action-buttons">
+            <a href="/schemes/edit/<%= scheme._id %>" class="edit-btn">Edit</a>
+            <button type="submit" class="delete-btn">Delete</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; <%= new Date().getFullYear() %> Medical Schemes Portal | All Rights Reserved
+  </footer>
+
+</body>
+</html>
