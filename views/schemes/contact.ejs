@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Medical Schemes Portal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; margin: 0; }
+        header, footer { background: #0077b6; color: white; padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        nav { display: flex; justify-content: center; gap: 25px; }
+        nav a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        nav a:hover { color: #caf0f8; }
+        .container { width: 80%; margin: 50px auto; text-align: center; }
+        h1 { color: #023e8a; }
+        p { font-size: 1.1em; color: #333; margin-top: 15px; line-height: 1.6; }
+        .contact-box { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 60%; margin: auto; }
+        footer { margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Medical Schemes Portal</h2>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/schemes">Schemes</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Contact Us</h1>
+        <div class="contact-box">
+            <p>If you have questions, feedback, or need support, feel free to reach out to us:</p>
+            <p><strong>Email:</strong> support@medicalschemes.in</p>
+            <p><strong>Phone:</strong> +91 98765 43210</p>
+            <p><strong>Address:</strong> Pune, Maharashtra, India</p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; <%= new Date().getFullYear() %> Medical Schemes Portal | All Rights Reserved
+    </footer>
+</body>
+</html>

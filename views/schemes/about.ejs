@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Medical Schemes Portal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; margin: 0; }
+        header, footer { background: #0077b6; color: white; padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        nav { display: flex; justify-content: center; gap: 25px; }
+        nav a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        nav a:hover { color: #caf0f8; }
+        .container { width: 80%; margin: 50px auto; text-align: center; }
+        h1 { color: #023e8a; }
+        p { font-size: 1.1em; color: #333; margin-top: 15px; line-height: 1.6; }
+        footer { margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Medical Schemes Portal</h2>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/schemes">Schemes</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>About Us</h1>
+        <p>
+            The <strong>Medical Schemes Portal</strong> is a public initiative designed to provide 
+            citizens with accurate and updated information about various medical and health benefit schemes.
+            Our mission is to make healthcare more accessible and affordable by spreading awareness 
+            about government and private medical assistance programs.
+        </p>
+        <p>
+            We collect verified information from trusted sources to ensure users can make informed 
+            decisions about healthcare options available to them.
+        </p>
+    </div>
+
+    <footer>
+        &copy; <%= new Date().getFullYear() %> Medical Schemes Portal | All Rights Reserved
+    </footer>
+</body>
+</html>

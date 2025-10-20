@@ -1,0 +1,23 @@
+{
+  "name": "majorproject",
+  "version": "1.0.0",
+  "description": "globetrekker Major Project with Express, EJS, and MongoDB",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["express", "mongoose", "ejs", "hostelhub"],
+  "author": "Ajay Ghadage",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mongoose": "^8.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

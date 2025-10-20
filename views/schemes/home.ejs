@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Medical Schemes Portal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+        }
+
+        header {
+            background: #0077b6;
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        nav {
+            width: 90%;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h2 {
+            margin: 0;
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #caf0f8;
+        }
+
+        .container {
+            width: 90%;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        h1 {
+            color: #023e8a;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 25px;
+            background: #0077b6;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #0096c7;
+        }
+
+        footer {
+            background: #0077b6;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h2>Medical Schemes Portal</h2>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/about">About Us</a>
+                <a href="/contact">Contact Us</a>
+                <a href="/schemes">Schemes</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Welcome to the Medical Schemes Portal</h1>
+        <p>Explore various government and private healthcare schemes designed to support citizens with medical and financial assistance.</p>
+        <a class="btn" href="/schemes">View All Schemes</a>
+    </div>
+
+    <footer>
+        &copy; <%= new Date().getFullYear() %> Medical Schemes Portal | All Rights Reserved
+    </footer>
+</body>
+</html>
