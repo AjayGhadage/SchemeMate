@@ -1,48 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us | Medical Schemes Portal</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; margin: 0; }
-        header, footer { background: #0077b6; color: white; padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        nav { display: flex; justify-content: center; gap: 25px; }
-        nav a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
-        nav a:hover { color: #caf0f8; }
-        .container { width: 80%; margin: 50px auto; text-align: center; }
-        h1 { color: #023e8a; }
-        p { font-size: 1.1em; color: #333; margin-top: 15px; line-height: 1.6; }
-        footer { margin-top: 40px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | SchemeMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h2>Medical Schemes Portal</h2>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/about">About Us</a>
-            <a href="/contact">Contact Us</a>
-            <a href="/schemes">Schemes</a>
-        </nav>
-    </header>
+<body class="bg-gray-50 text-gray-800 font-sans">
 
-    <div class="container">
-        <h1>About Us</h1>
-        <p>
-            The <strong>Medical Schemes Portal</strong> is a public initiative designed to provide 
-            citizens with accurate and updated information about various medical and health benefit schemes.
-            Our mission is to make healthcare more accessible and affordable by spreading awareness 
-            about government and private medical assistance programs.
-        </p>
-        <p>
-            We collect verified information from trusted sources to ensure users can make informed 
-            decisions about healthcare options available to them.
-        </p>
+  <!-- Header -->
+  <header class="bg-blue-700 text-white shadow-md">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      
+      <!-- Logo + Title -->
+      <div class="flex items-center space-x-3">
+        <img src="/images/logo.png" alt="SchemeMate Logo" class="w-10 h-10 rounded-full">
+        <h1 class="text-2xl font-bold">SchemeMate</h1>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex space-x-6">
+        <a href="/" class="hover:text-gray-200 font-medium">Home</a>
+        <a href="/about" class="hover:text-gray-200 font-medium">About Us</a>
+        <a href="/contact" class="hover:text-gray-200 font-medium">Contact</a>
+        <a href="/schemes" class="hover:text-gray-200 font-medium">Schemes</a>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button id="menu-btn" class="md:hidden focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
     </div>
 
-    <footer>
-        &copy; <%= new Date().getFullYear() %> Medical Schemes Portal | All Rights Reserved
-    </footer>
+    <!-- Mobile Dropdown Menu -->
+    <nav id="mobile-menu" class="md:hidden hidden flex-col space-y-3 bg-blue-600 px-6 pb-4">
+      <a href="/" class="block hover:text-gray-200 font-medium">Home</a>
+      <a href="/about" class="block hover:text-gray-200 font-medium">About Us</a>
+      <a href="/contact" class="block hover:text-gray-200 font-medium">Contact</a>
+      <a href="/schemes" class="block hover:text-gray-200 font-medium">Schemes</a>
+    </nav>
+  </header>
+
+  <!-- Mobile Menu Toggle Script -->
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  </script>
+
+  <!-- Hero Section -->
+  <section class="bg-blue-100 py-16">
+    <div class="container mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-bold text-blue-800 mb-4">About SchemeMate</h2>
+      <p class="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
+        Your trusted platform to explore and learn about medical and health benefit schemes, making healthcare more accessible for everyone.
+      </p>
+    </div>
+  </section>
+
+  <!-- Info Section -->
+  <section class="container mx-auto my-16 px-4 grid md:grid-cols-2 gap-12 items-center">
+    
+    <!-- Text -->
+    <div>
+      <h3 class="text-3xl font-semibold text-blue-800 mb-4">Our Mission</h3>
+      <p class="text-gray-700 mb-6">
+        SchemeMate aims to provide accurate and updated information on government and private medical schemes to help citizens make informed decisions about healthcare.
+      </p>
+
+      <h3 class="text-3xl font-semibold text-blue-800 mb-4">Why Choose SchemeMate?</h3>
+      <p class="text-gray-700 mb-6">
+        We verify information from trusted sources and present it in a user-friendly way, ensuring you can easily find schemes relevant to your needs.
+      </p>
+
+      <a href="/schemes" class="inline-block bg-blue-700 text-white font-medium px-6 py-3 rounded-md hover:bg-blue-800 transition">
+        Explore Schemes
+      </a>
+    </div>
+
+    <!-- Image / Illustration -->
+    <div class="flex justify-center">
+      <img src="https://plus.unsplash.com/premium_photo-1699387204388-120141c76d51?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1378" 
+           alt="Healthcare Illustration" class="rounded-lg shadow-lg">
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-800 text-white mt-16">
+    <div class="container mx-auto px-6 py-10 grid md:grid-cols-4 gap-8">
+
+      <!-- About -->
+      <div>
+        <h4 class="font-bold text-lg mb-4">SchemeMate</h4>
+        <p class="text-gray-200 text-sm">
+          SchemeMate is your trusted platform for exploring medical and health benefit schemes. We provide verified information to help citizens make informed decisions about healthcare.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+        <ul class="space-y-2">
+          <li><a href="/" class="hover:text-gray-300">Home</a></li>
+          <li><a href="/about" class="hover:text-gray-300">About Us</a></li>
+          <li><a href="/contact" class="hover:text-gray-300">Contact</a></li>
+          <li><a href="/schemes" class="hover:text-gray-300">Schemes</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h4 class="font-bold text-lg mb-4">Contact</h4>
+        <p class="text-gray-200 text-sm">Email: info@schememate.com</p>
+        <p class="text-gray-200 text-sm">Phone: +91 123 456 7890</p>
+        <p class="text-gray-200 text-sm">Location: India</p>
+      </div>
+
+      <!-- Social Links -->
+      <div>
+        <h4 class="font-bold text-lg mb-4">Follow Us</h4>
+        <div class="flex space-x-4 text-2xl">
+          <a href="#" class="hover:text-gray-300">🌐</a>
+          <a href="#" class="hover:text-gray-300">🐦</a>
+          <a href="#" class="hover:text-gray-300">📘</a>
+          <a href="#" class="hover:text-gray-300">📸</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Copyright -->
+    <div class="bg-blue-900 text-center text-gray-300 py-4 text-sm">
+      &copy; <%= new Date().getFullYear() %> SchemeMate | All Rights Reserved
+    </div>
+  </footer>
+
 </body>
 </html>

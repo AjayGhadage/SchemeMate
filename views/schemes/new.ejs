@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Scheme</title>
+  <style>
+    body { font-family: 'Segoe UI'; background: #f8fafc; }
+    .container {
+      width: 50%;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #0077b6;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #023e8a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Add New Scheme</h2>
+    <form action="/schemes/add" method="POST">
+      <input type="text" name="title" placeholder="Title" required>
+      <textarea name="description" placeholder="Description" required></textarea>
+      <input type="text" name="benefitAmount" placeholder="Benefit Amount">
+      <input type="text" name="eligibility" placeholder="Eligibility">
+      <input type="text" name="location" placeholder="Location">
+      <input type="text" name="country" placeholder="Country">
+      <input type="text" name="category" placeholder="Category">
+      <input type="url" name="infoLink" placeholder="Info Link">
+      <button type="submit">Add Scheme</button>
+    </form>
+  </div>
+</body>
+</html>
