@@ -1,117 +1,627 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Medical Schemes Portal</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SchemeMate: Find Your Scheme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8fafc;
-            margin: 0;
+        /* Custom CSS for smooth fade transition in the slider */
+        .fade-in-out {
+            transition: opacity 0.7s ease-in-out;
         }
-
-        header {
-            background: #0077b6;
+        /* Ensure image covers the area, maintaining aspect ratio */
+        .slider-image {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            /* Added smooth transformation for visual appeal */
+            transition: transform 4s ease-in-out; 
+            transform: scale(1.0); /* Initial state */
+        }
+        /* Apply subtle zoom/scale when image loads */
+        .slider-image.active-zoom {
+            transform: scale(1.03); 
+        }
+        /* Custom text shadow for better readability over images */
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+        
+        /* ------------------------------------------- */
+        /* 🌟 CHATBOT CSS STYLES 🌟 */
+        /* ------------------------------------------- */
+        #chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        #chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            z-index: 99;
+            display: none; /* Starts hidden, set to 'flex' by JS */
+            flex-direction: column; 
+        }
+        #chat-messages {
+            overflow-y: auto;
+            flex-grow: 1; 
+            padding-bottom: 10px; 
+        }
+        .chat-bubble {
+            max-width: 80%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            word-wrap: break-word;
+            font-size: 0.95rem; 
+        }
+        .user-bubble {
+            background-color: #3b82f6; /* Tailwind blue-500 */
             color: white;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            margin-left: auto;
+            text-align: right;
         }
-
-        nav {
-            width: 90%;
-            margin: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .bot-bubble {
+            background-color: #e5e7eb; /* Tailwind gray-200 */
+            color: #1f2937; /* Tailwind gray-800 */
+            text-align: left;
         }
-
-        nav h2 {
-            margin: 0;
-            font-size: 1.6em;
-            font-weight: bold;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #caf0f8;
-        }
-
-        .container {
-            width: 90%;
-            margin: 50px auto;
-            text-align: center;
-        }
-
-        h1 {
-            color: #023e8a;
-        }
-
-        p {
-            font-size: 1.2em;
-            color: #333;
-            margin-top: 15px;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 25px;
-            background: #0077b6;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background 0.3s ease;
-        }
-
-        .btn:hover {
-            background: #0096c7;
-        }
-
-        footer {
-            background: #0077b6;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            margin-top: 40px;
-        }
+        
     </style>
 </head>
-<body>
-    <header>
-        <nav>
-            <h2>Medical Schemes Portal</h2>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/about">About Us</a>
-                <a href="/contact">Contact Us</a>
-                <a href="/schemes">Schemes</a>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <div class="flex items-center space-x-3">
+                <img src="/images/logo.png" alt="SchemeMate Logo: Magnifying glass and checkmark" class="w-10 h-10 rounded-full object-cover">
+                <h1 class="text-3xl font-extrabold tracking-wide">SchemeMate</h1>
             </div>
+
+            <nav class="hidden md:flex space-x-8 text-lg">
+                <a href="/" class="hover:text-blue-200 transition font-semibold">Home</a>
+                <a href="/schemes" class="hover:text-blue-200 transition font-semibold">All Schemes</a>
+                <a href="/about" class="hover:text-blue-200 transition font-semibold">About Us</a>
+                <a href="/contact" class="hover:text-blue-200 transition font-semibold">Contact</a>
+            </nav>
+
+            <button id="menu-btn" class="md:hidden focus:outline-none" aria-label="Toggle navigation menu" aria-expanded="false">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <nav id="mobile-menu" class="md:hidden hidden flex-col space-y-3 bg-blue-600 px-6 pb-4 transition-all duration-300 ease-in-out">
+            <a href="/" class="block hover:bg-blue-700 p-2 rounded font-medium">Home</a>
+            <a href="/schemes" class="block hover:bg-blue-700 p-2 rounded font-medium">All Schemes</a>
+            <a href="/about" class="block hover:bg-blue-700 p-2 rounded font-medium">About Us</a>
+            <a href="/contact" class="block hover:bg-blue-700 p-2 rounded font-medium">Contact</a>
         </nav>
     </header>
 
-    <div class="container">
-        <h1>Welcome to the Medical Schemes Portal</h1>
-        <p>Explore various government and private healthcare schemes designed to support citizens with medical and financial assistance.</p>
-        <a class="btn" href="/schemes">View All Schemes</a>
+    <main class="container mx-auto px-4 md:px-8">
+        
+        <section id="hero-slider-container" class="bg-gray-700 text-white py-16 md:py-20 rounded-3xl shadow-2xl mt-8 mb-12 border-t-8 border-blue-600 relative overflow-hidden h-[500px] md:h-[600px]">
+            
+            <div id="idea-slider" class="absolute inset-0 w-full h-full fade-in-out">
+                </div>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center p-4 z-10">
+                <h2 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white mb-4 tracking-tight text-shadow">
+                    SchemeMate
+                </h2>
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold text-blue-300 mb-6 max-w-4xl mx-auto px-2 text-shadow">
+                    Find Verified Schemes for Health, Education, and Farmers.
+                </h3>
+                <p class="text-base sm:text-lg lg:text-xl text-gray-200 max-w-3xl mx-auto px-2 text-shadow">
+                    Eliminate confusion. Instantly check eligibility and get direct links to official government benefits.
+                </p>
+            </div>
+            
+            <div id="slider-dots" class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 p-2 z-20">
+                </div>
+
+        </section>
+        
+        <section class="py-8 mb-16 text-center bg-white rounded-xl shadow-2xl border-t-8 border-blue-600 -mt-10 relative z-30">
+            <div class="max-w-5xl mx-auto px-4">
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">Start Your Search Now</h3>
+                
+                <form action="/schemes" method="GET" class="flex flex-col md:flex-row gap-3 p-4 bg-gray-100 rounded-xl shadow-inner border border-gray-200">
+                    
+                    <input 
+                        type="search" 
+                        name="q" 
+                        placeholder="Search by keyword: 'health insurance', 'crop subsidy', 'scholarship'" 
+                        class="w-full md:w-auto flex-grow p-4 border-2 border-transparent rounded-lg text-lg bg-white text-gray-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-200 transition shadow-md"
+                        aria-label="Scheme Keyword Search"
+                    >
+                    
+                    <select name="category" 
+                        class="w-full md:w-1/4 p-4 border-2 border-transparent rounded-lg text-lg bg-white text-gray-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-200 transition shadow-md" 
+                        aria-label="Scheme Category Filter">
+                        <option value="">All Categories</option>
+                        <option value="Medical">Medical 🏥</option>
+                        <option value="Education">Education 🎓</option>
+                        <option value="Farmer">Farmer 🌱</option>
+                    </select>
+                    
+                    <button 
+                        type="submit" 
+                        class="w-full md:w-auto bg-yellow-400 text-blue-900 font-bold py-4 px-8 rounded-lg hover:bg-yellow-500 transition duration-300 text-xl shadow-lg transform hover:scale-105"
+                    >
+                        Find Scheme
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section class="py-10 my-12">
+            <h3 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-12">Explore Top Categories</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                
+                <a href="/schemes?category=Medical" class="block bg-red-50 hover:bg-red-100 p-6 sm:p-8 rounded-xl shadow-lg border-l-8 border-red-600 transform hover:-translate-y-1 transition duration-300">
+                    <img src="/images/medical-icon.jpg" alt="Medical Cross Icon" class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 object-contain">
+                    <h4 class="text-xl md:text-2xl font-semibold mb-2 text-gray-900">Healthcare Benefits</h4>
+                    <p class="text-sm md:text-base text-gray-700">Find schemes related to health insurance, subsidized treatment, and critical care.</p>
+                    <span class="text-xs md:text-sm font-bold text-red-700 mt-3 inline-block">View Schemes →</span>
+                </a>
+
+                <a href="/schemes?category=Education" class="block bg-yellow-50 hover:bg-yellow-100 p-6 sm:p-8 rounded-xl shadow-lg border-l-8 border-yellow-600 transform hover:-translate-y-1 transition duration-300">
+                    <img src="/images/education-icon.jpg" alt="Graduation Cap Icon" class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 object-contain">
+                    <h4 class="text-xl md:text-2xl font-semibold mb-2 text-gray-900">Scholarships & Grants</h4>
+                    <p class="text-sm md:text-base text-gray-700">Explore financial aid, merit scholarships, and education loan interest subsidies.</p>
+                    <span class="text-xs md:text-sm font-bold text-yellow-700 mt-3 inline-block">View Schemes →</span>
+                </a>
+
+                <a href="/schemes?category=Farmer" class="block bg-green-50 hover:bg-green-100 p-6 sm:p-8 rounded-xl shadow-lg border-l-8 border-green-600 transform hover:-translate-y-1 transition duration-300">
+                    <img src="/images/farmer-icon.jpg" alt="Sprouting Plant Icon" class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 object-contain">
+                    <h4 class="text-xl md:text-2xl font-semibold mb-2 text-gray-900">Agriculture Support</h4>
+                    <p class="text-sm md:text-base text-gray-700">Access crop insurance, farm equipment subsidies, and direct benefit transfers.</p>
+                    <span class="text-xs md:text-sm font-bold text-green-700 mt-3 inline-block">View Schemes →</span>
+                </a>
+                
+            </div>
+        </section>
+
+        <hr class="my-10 border-gray-200">
+
+        <section class="py-10 my-12">
+            <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">Featured Scheme: <span class="text-blue-600">Pradhan Mantri Jeevan Jyoti Bima Yojana</span></h3>
+            <div class="max-w-3xl mx-auto bg-white border border-blue-200 rounded-xl shadow-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
+                
+                <div class="text-blue-600 text-6xl md:text-7xl p-4 bg-blue-50 rounded-full flex-shrink-0">
+                    🛡️
+                </div>
+                <div class="text-left">
+                    <h4 class="text-2xl font-bold text-gray-900 mb-2">Life Insurance Cover for Bank Account Holders</h4>
+                    <p class="text-gray-700 mb-4">
+                        Provide financial security for your family. Renewable one-year term life insurance scheme offering **₹2 Lakh** death coverage at a minimal annual premium.
+                    </p>
+                    <a href="https://financialservices.gov.in/beta/en/pmjjby" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-lg font-bold text-blue-600 hover:text-blue-700 transition">
+                        View Details & Official Site <span class="ml-2 text-xl">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="py-12 my-16 bg-white rounded-xl shadow-2xl border-t-4 border-blue-600">
+            <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-900 text-center mb-10">Why Choose SchemeMate?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
+                
+                <div class="p-4 text-center">
+                    <div class="text-5xl text-red-600 mb-3">✅</div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">100% Verified Sources</h4>
+                    <p class="text-gray-600">Every scheme is cross-checked and linked **directly to the official government portal**. No rumors, no fake news.</p>
+                </div>
+                
+                <div class="p-4 text-center">
+                    <div class="text-5xl text-yellow-600 mb-3">🔍</div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">Effortless Eligibility Check</h4>
+                    <p class="text-gray-600">Our smart filters quickly narrow down schemes based on your needs and demographics.</p>
+                </div>
+
+                <div class="p-4 text-center">
+                    <div class="text-5xl text-green-600 mb-3">🔄</div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">Always Up-to-Date</h4>
+                    <p class="text-gray-600">We constantly monitor official announcements to ensure all deadlines and details are current.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="text-center py-12 my-16 bg-blue-50 rounded-xl shadow-md">
+            <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 px-2">Transparency, Verification, Simplicity.</h3>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4">
+                We cut through the bureaucracy. Every scheme listed provides a **direct link to the official source**, ensuring you get reliable, up-to-date information every time.
+            </p>
+            <a href="/about" class="mt-6 inline-block text-blue-600 font-bold hover:text-blue-700 transition">
+                Learn About Our Verification Process →
+            </a>
+        </section>
+
+        <section class="py-16 text-center bg-white rounded-xl shadow-2xl border-t-4 border-blue-600 mb-12">
+            <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-12">SchemeMate by the Numbers</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                
+                <div class="p-4">
+                    <p class="text-5xl font-extrabold text-blue-600 mb-2">450+</p>
+                    <p class="text-xl font-semibold text-gray-700">Verified Schemes</p>
+                    <p class="text-sm text-gray-500 mt-1">Across 12 Government Departments</p>
+                </div>
+
+                <div class="p-4 border-t-2 sm:border-t-0 sm:border-l-2 sm:border-r-2 border-gray-200">
+                    <p class="text-5xl font-extrabold text-blue-600 mb-2">100%</p>
+                    <p class="text-xl font-semibold text-gray-700">Official Links</p>
+                    <p class="text-sm text-gray-500 mt-1">Guaranteed source verification</p>
+                </div>
+
+                <div class="p-4">
+                    <p class="text-5xl font-extrabold text-blue-600 mb-2">50k+</p>
+                    <p class="text-xl font-semibold text-gray-700">Citizens Helped</p>
+                    <p class="text-sm text-gray-500 mt-1">Find eligibility easily this year</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-white mt-20">
+        <div class="container mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
+            
+            <div class="col-span-2 md:col-span-1">
+                <h4 class="font-bold text-xl mb-4 text-blue-400">SchemeMate</h4>
+                <p class="text-gray-400 text-sm">
+                    Connecting citizens with verified government benefits for health, education, and agriculture, powered by transparent data.
+                </p>
+                <a href="/about" class="mt-4 inline-block text-blue-300 hover:text-blue-100 font-medium text-sm transition">Learn More →</a>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="/" class="hover:text-white transition">Home</a></li>
+                    <li><a href="/schemes" class="hover:text-white transition">All Schemes</a></li>
+                    <li><a href="/about" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="/contact" class="hover:text-white transition">Contact</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg mb-4">Support</h4>
+                <p class="text-gray-400 text-sm">Email: support@schememate.com</p>
+                <p class="text-gray-400 text-sm">Phone: +91 987 654 3210</p>
+                <p class="text-gray-400 text-sm mt-2">Location: India</p>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg mb-4">Connect</h4>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-blue-400 transition" aria-label="LinkedIn">💼</a> 
+                    <a href="#" class="hover:text-blue-400 transition" aria-label="Twitter/X">🐦</a>
+                    <a href="#" class="hover:text-blue-400 transition" aria-label="Facebook">📘</a>
+                    <a href="#" class="hover:text-blue-400 transition" aria-label="Website Link">🔗</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-gray-800 text-center text-gray-500 py-4 text-sm">
+            &copy; 2025 SchemeMate | All Rights Reserved
+        </div>
+    </footer>
+
+    <div id="chat-button">
+        <button id="toggle-chat-btn" 
+                class="bg-blue-600 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center text-3xl hover:bg-blue-700 transition transform hover:scale-110"
+                aria-label="Toggle Chatbot">
+            🤖
+        </button>
     </div>
 
-    <footer>
-        &copy; <%= new Date().getFullYear() %> Medical Schemes Portal | All Rights Reserved
-    </footer>
+    <div id="chat-window" class="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div class="p-4 bg-blue-600 text-white font-bold text-lg flex justify-between items-center flex-shrink-0">
+            SchemeBot (Powered by Gemini)
+        </div>
+        
+        <div id="chat-messages" class="p-4 space-y-4">
+            <div class="flex justify-start">
+                <div class="chat-bubble bot-bubble">
+                    Hello! I'm SchemeBot. Ask me about **Medical**, **Education**, or **Farmer** schemes, or any general question!
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-4 border-t border-gray-200 flex-shrink-0">
+            <div class="flex gap-2">
+                <input type="text" id="chat-input" placeholder="Ask about a scheme or a general question..." 
+                        class="w-full p-3 border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                <button id="send-chat-btn" 
+                        class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition flex-shrink-0">
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+    
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Mobile Menu Toggle ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuBtn && mobileMenu) {
+            menuBtn.addEventListener('click', () => {
+                const isExpanded = mobileMenu.classList.toggle('hidden');
+                menuBtn.setAttribute('aria-expanded', !isExpanded);
+            });
+        }
+
+        // --- Scheme Idea Slider Logic ---
+        const slider = document.getElementById('idea-slider');
+        const dotsContainer = document.getElementById('slider-dots');
+        
+        if (slider && dotsContainer) {
+            const ideas = [
+                { 
+                    title: "Universal Health Insurance", 
+                    description: "Coverage for all citizens, focused on critical care.", 
+                    imageUrl: "https://media.istockphoto.com/id/1779627829/photo/doctor-online-professional-doctor-giving-consultation-online-on-global-network-connect.jpg?s=612x612&w=0&k=20&c=2_2Afo5fs-lVMa3sidqogmlxw1nKiuHAjo-0oGFiLNY=", 
+                    category: "Medical"
+                },
+                { 
+                    title: "Skill Development Scholarships", 
+                    description: "Grants for technical training and vocational courses.", 
+                    imageUrl: "https://media.istockphoto.com/id/1029549544/photo/scholarship-opportunity-and-education-success-concept-with-school-kid-with-doodle-drawing-of.jpg?s=612x612&w=0&k=20&c=gD0jW46DL-B_e57Nl5X_WSyoe2GFPGfbZ-njkDhU94c=", 
+                    category: "Education"
+                },
+                { 
+                    title: "Direct Farm Income Support", 
+                    description: "Annual financial aid directly credited to farmer accounts.", 
+                    imageUrl: "https://media.istockphoto.com/id/1330214182/photo/happy-smiling-indian-farmer-counting-currency-notes-inside-the-greenhouse-or-polyhouse.jpg?s=612x612&w=0&k=20&c=KF8FEcctbRfDiVQ9SkFHDQIgtU_NadPva5nqe5-vUpk=", 
+                    category: "Farmer"
+                }
+            ];
+
+            let currentIndex = 0;
+            const transitionDuration = 700; 
+            const slideInterval = 4000; 
+            let autoRotateInterval;
+
+            function updateSlider(index) {
+                const idea = ideas[index];
+                
+                slider.innerHTML = `
+                    <img src="${idea.imageUrl}" alt="${idea.title}" class="slider-image absolute inset-0 w-full h-full active-zoom transform-gpu" loading="lazy">
+                    
+                    <div class="absolute inset-0 bg-black/40 flex flex-col justify-end items-center p-4">
+                        <a href="/schemes?category=${idea.category}" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 shadow-xl mb-6 transform hover:scale-105 z-30">
+                            View ${idea.category} Schemes →
+                        </a>
+                    </div>
+                `;
+                
+                const dotsHtml = ideas.map((_, i) => `
+                    <button class="w-3 h-3 rounded-full mx-1 transition-all focus:outline-none 
+                        ${i === index ? 'bg-blue-600 border-2 border-white' : 'bg-gray-400 hover:bg-gray-200 opacity-75'}"
+                        data-index="${i}" aria-label="Go to slide ${i + 1}"></button>
+                `).join('');
+                dotsContainer.innerHTML = dotsHtml;
+
+                dotsContainer.querySelectorAll('button').forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        const newIndex = parseInt(e.target.getAttribute('data-index'));
+                        goToSlide(newIndex);
+                    });
+                });
+            }
+
+            function goToSlide(newIndex) {
+                if (newIndex === currentIndex) return;
+
+                clearInterval(autoRotateInterval);
+                startAutoRotation(); 
+
+                slider.style.opacity = '0'; 
+                
+                setTimeout(() => {
+                    currentIndex = newIndex;
+                    updateSlider(currentIndex);
+                    slider.style.opacity = '1'; 
+                }, transitionDuration);
+            }
+
+            function nextSlide() {
+                const nextIndex = (currentIndex + 1) % ideas.length;
+                goToSlide(nextIndex);
+            }
+            
+            function startAutoRotation() {
+                autoRotateInterval = setInterval(nextSlide, slideInterval);
+            }
+
+            updateSlider(currentIndex);
+            slider.style.opacity = '1';
+            startAutoRotation();
+        }
+
+        // -----------------------------------------------------
+        // 🌟 AI CHATBOT LOGIC WITH IRISH VOICE SELECTION 🇮🇪
+        // -----------------------------------------------------
+        const toggleBtn = document.getElementById('toggle-chat-btn');
+        const chatWindow = document.getElementById('chat-window');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-chat-btn');
+        const chatMessages = document.getElementById('chat-messages');
+
+        // Speech Synthesis Setup
+        const synthesis = window.speechSynthesis;
+        const speechSupported = 'speechSynthesis' in window;
+        let botVoice = null;
+
+        if (speechSupported) {
+            // Find a suitable voice once voices are loaded, prioritizing Irish accent
+            synthesis.onvoiceschanged = () => {
+                const voices = synthesis.getVoices();
+                
+                // 1. Try to find an Irish English voice (en-IE)
+                botVoice = voices.find(voice => voice.lang === 'en-IE');
+
+                // 2. Fallback to any British English voice (en-GB)
+                if (!botVoice) {
+                    botVoice = voices.find(voice => voice.name.includes('Great Britain') || voice.lang === 'en-GB');
+                }
+                
+                // 3. Final Fallback to any English voice
+                if (!botVoice) {
+                    botVoice = voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+                }
+
+                // Console log for debugging the selected voice
+                console.log(`SchemeBot Voice set to: ${botVoice ? botVoice.name : 'Default/Unavailable'}`);
+            };
+        }
+
+        // Helper function to speak the bot's message
+        function speakResponse(text) {
+            if (!speechSupported || synthesis.speaking) {
+                return; 
+            }
+
+            // Remove any markdown (like **bold**) that might interrupt the speech engine
+            const cleanText = text.replace(/\*\*(.*?)\*\*/g, '$1'); 
+            
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.voice = botVoice;
+            utterance.pitch = 1.0;
+            utterance.rate = 1.0;
+
+            synthesis.speak(utterance);
+        }
+
+        if (toggleBtn && chatWindow) {
+            // Toggle chat window visibility
+            toggleBtn.addEventListener('click', () => {
+                chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+                if (chatWindow.style.display === 'flex') {
+                    chatInput.focus();
+                }
+                // Stop speaking when chat window is closed
+                if (chatWindow.style.display === 'none' && synthesis.speaking) {
+                    synthesis.cancel();
+                }
+            });
+
+            // Helper function to add a message to the chat window
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                const bubbleClass = sender === 'user' ? 'user-bubble' : 'bot-bubble';
+                const justifyClass = sender === 'user' ? 'justify-end' : 'justify-start';
+
+                messageDiv.className = `flex ${justifyClass}`;
+                messageDiv.innerHTML = `<div class="chat-bubble ${bubbleClass}">${text}</div>`;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to bottom
+            }
+
+            // Function to handle sending the message
+            async function sendMessage() {
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                // Stop any previous speech before adding new messages
+                if (synthesis.speaking) {
+                    synthesis.cancel();
+                }
+
+                addMessage(message, 'user');
+                chatInput.value = ''; 
+                chatInput.disabled = true; 
+                sendBtn.disabled = true;
+
+                // Add a "typing" indicator
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'flex justify-start';
+                typingIndicator.id = 'typing-indicator';
+                typingIndicator.innerHTML = '<div class="chat-bubble bot-bubble text-gray-500">... SchemeBot is thinking</div>';
+                chatMessages.appendChild(typingIndicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                try {
+                    // --- GENERAL AI API CALL (CONCEPTUAL) START ---
+                    // NOTE: This assumes you have a backend server at /api/gemini-chat
+                    const response = await fetch('/api/gemini-chat', { 
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: message }) // Send the user's message
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    // --- GENERAL AI API CALL (CONCEPTUAL) END ---
+
+                    // Remove typing indicator
+                    const indicator = document.getElementById('typing-indicator');
+                    if (indicator) chatMessages.removeChild(indicator);
+
+                    // Get and display the reply
+                    const replyText = data.reply || "I encountered an issue getting a full response from the server. Please check the backend connection and Gemini API setup.";
+                    addMessage(replyText, 'bot');
+                    
+                    // 🗣️ SPEAK THE AI RESPONSE
+                    speakResponse(replyText); 
+
+                } catch (error) {
+                    console.error('Chat API error:', error);
+                    const indicator = document.getElementById('typing-indicator');
+                    if (indicator) chatMessages.removeChild(indicator);
+                    
+                    // Display general failure message first
+                    addMessage('Error: Could not connect to the SchemeBot service for a general query. **Make sure your backend server is running and configured with the Gemini API.** Falling back to specific keyword replies for now.', 'bot');
+                    
+                    // Fallback logic for limited replies
+                    let fallbackReply = '';
+                    const lowerMessage = message.toLowerCase();
+
+                    if (lowerMessage.includes('medical') || lowerMessage.includes('health')) {
+                        fallbackReply = 'The Medical category includes schemes like subsidized health insurance and critical care funds. The **Pradhan Mantri Jeevan Jyoti Bima Yojana** on our homepage is a good start.';
+                    } else if (lowerMessage.includes('education') || lowerMessage.includes('scholarship')) {
+                        fallbackReply = 'For Education, we have various scholarships and grants, particularly for vocational training. Try searching for "merit scholarship" on the main search bar to filter the results!';
+                    } else if (lowerMessage.includes('farmer') || lowerMessage.includes('agriculture') || lowerMessage.includes('crop')) {
+                        fallbackReply = 'Our Farmer category focuses on crop insurance, equipment subsidies, and direct income support.';
+                    } else {
+                        fallbackReply = 'Since the full AI is offline, please ask a question specifically about **Medical, Education, or Farmer** schemes.';
+                    }
+                    
+                    addMessage(fallbackReply, 'bot');
+                    
+                    // 🗣️ SPEAK THE FALLBACK RESPONSE
+                    speakResponse(fallbackReply);
+
+                } finally {
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    chatInput.focus();
+                }
+            }
+
+            // Event listeners for sending message
+            sendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

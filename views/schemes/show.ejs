@@ -1,73 +1,142 @@
+I'm happy to provide the complete, corrected code for your `views/schemes/show.ejs` file.
+
+This version includes the **Admin role checks** for the Edit and Delete buttons, and it fixes the potential EJS syntax error by simplifying the logic used to format the **Benefit** amount.
+
+```ejs
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title><%= scheme.title %> | Medical Schemes</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: #fff;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    h1 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-    }
-    p {
-      font-size: 15px;
-      color: #555;
-      margin-bottom: 10px;
-    }
-    .meta {
-      font-size: 14px;
-      color: #333;
-      margin: 5px 0;
-    }
-    .benefit {
-      font-weight: bold;
-      color: #27ae60;
-      margin: 15px 0;
-    }
-    .btn {
-      display: inline-block;
-      padding: 8px 14px;
-      background: #2980b9;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: background 0.2s ease;
-      margin-top: 15px;
-    }
-    .btn:hover {
-      background: #1f6391;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= scheme.title %> Details | SchemeMate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/style.css"> 
 </head>
-<body>
-  <div class="container">
-    <h1><%= scheme.title %></h1>
-    <p><%= scheme.description %></p>
-    <p class="meta"><strong>Category:</strong> <%= scheme.category || "N/A" %></p>
-    <p class="meta"><strong>Eligibility:</strong> <%= scheme.eligibility || "N/A" %></p>
-    <p class="meta"><strong>Location:</strong> <%= scheme.location || "Pan India" %></p>
-    <p class="meta"><strong>Country:</strong> <%= scheme.country || "India" %></p>
-    <p class="benefit">Benefit: <%= scheme.benefitAmount || "N/A" %></p>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
 
-    <% if (scheme.infoLink) { %>
-      <a class="btn" href="<%= scheme.infoLink %>" target="_blank">Official Info</a>
-    <% } %>
+    <header class="bg-blue-600 text-white shadow-xl sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="/images/logo.png" alt="SchemeMate Logo" class="w-10 h-10 rounded-full object-cover border-2 border-white">
+                <a href="/" class="text-2xl font-bold hover:text-blue-200 transition">
+                    SchemeMate
+                </a>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-lg">
+                <a href="/" class="hover:text-blue-200 transition font-semibold">Home</a>
+                <a href="/schemes" class="hover:text-blue-200 transition font-semibold">All Schemes</a>
+                <a href="/schemes/about" class="hover:text-blue-200 transition font-semibold">About Us</a>
+                <a href="/schemes/contact" class="hover:text-blue-200 transition font-semibold">Contact</a>
+                <% if (currentUser && currentUser.role === 'admin') { %>
+                    <a href="/schemes/new" class="hover:text-blue-200 transition font-semibold border-l pl-6 border-blue-500">Add New Scheme</a>
+                <% } %>
+            </nav>
+            <button id="menu-btn" class="md:hidden text-white hover:text-blue-200" aria-label="Toggle navigation menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+    </header>
+    <%- include('../partials/flash') %>
 
-    <a class="btn" href="/schemes">← Back to All Schemes</a>
-  </div>
+    <main class="container mx-auto px-4 py-12 flex-grow">
+        <div class="relative max-w-4xl mx-auto rounded-xl shadow-2xl overflow-hidden">
+            
+            <div class="absolute inset-0 bg-cover bg-center opacity-10" 
+                    style="background-image: url('https://media.istockphoto.com/id/1349188334/photo/businessman-using-computer-laptop-with-virtual-folder-graphic-for-online-document-database.jpg?s=2048x2048&w=is&k=20&c=v8WdD09tdV3POJe2ITjgZ9jFQAiqJRhPGYAEHYEc8_A=');">
+            </div>
+            
+            <div class="relative bg-white/95 p-8 border-t-8 border-blue-600">
+
+                <span class="text-sm font-semibold uppercase px-3 py-1 rounded-full bg-blue-100 text-blue-700 mb-3 inline-block">
+                    <%= scheme.category %>
+                </span>
+
+                <h1 class="text-4xl font-bold text-gray-900 mb-4"><%= scheme.title %></h1>
+                
+                <p class="text-lg text-gray-700 mb-6 border-b pb-4"><%= scheme.description %></p>
+
+                <div class="space-y-4">
+
+                    <%
+                        let formattedBenefit = scheme.benefitAmount;
+                        try {
+                            const amount = Number(scheme.benefitAmount);
+                            if (!isNaN(amount) && amount !== 0) {
+                                formattedBenefit = `₹${amount.toLocaleString('en-IN')}`;
+                            }
+                        } catch (e) {
+                            // Keep original string if parsing fails
+                        }
+                    %>
+                    <p class="text-xl font-semibold text-green-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v3h-1a1 1 0 100 2h3a1 1 0 100-2h-1v-4h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                        </svg>
+                        <strong class="text-gray-900">Benefit:</strong> <%= formattedBenefit %>
+                    </p>
+                    <p class="text-gray-700">
+                        <strong class="text-gray-900">Eligibility:</strong> <%= scheme.eligibility %>
+                    </p>
+                    
+                    <p class="text-gray-700">
+                        <strong class="text-gray-900">Location:</strong> <%= scheme.location %>
+                    </p>
+
+                    <% if (scheme.infoLink) { %>
+                        <p>
+                            <a href="<%= scheme.infoLink %>" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg 
+                                      hover:bg-blue-700 transition duration-200 mt-4 shadow-md transform hover:scale-[1.02]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                                    <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                                </svg>
+                                View Official Website
+                            </a>
+                        </p>
+                    <% } %>
+                </div>
+
+                <div class="flex flex-wrap gap-3 mt-8 border-t pt-6">
+                    
+                    <% if (currentUser && currentUser.role === 'admin') { %>
+                        <a href="/schemes/<%= scheme._id %>/edit" 
+                           class="bg-yellow-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-yellow-600 transition shadow-md">
+                            Edit Scheme
+                        </a>
+                        
+                        <form action="/schemes/delete/<%= scheme._id %>?_method=DELETE" method="POST" 
+                              onsubmit="return confirm('⚠️ WARNING: Are you sure you want to permanently delete the scheme: <%= scheme.title %>?');">
+                            <button type="submit" 
+                                    class="bg-red-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-700 transition shadow-md">
+                                Delete Scheme
+                            </button>
+                        </form>
+                    <% } %>
+                    <a href="/schemes" class="text-gray-600 font-semibold px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition shadow-sm">
+                        ← Back to All Schemes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-auto">
+        <div class="container mx-auto px-4 py-6 text-center text-sm border-t border-gray-700">
+            <p>&copy; <%= new Date().getFullYear() %> SchemeMate. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileNav = document.querySelector('header nav.md\\:hidden'); 
+        if(menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                // You may need to implement a dedicated mobile navigation structure 
+                // and uncomment the line below if you add it.
+                // mobileNav.classList.toggle('hidden'); 
+            });
+        }
+    </script>
 </body>
 </html>
+```

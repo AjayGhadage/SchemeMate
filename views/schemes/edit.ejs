@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Scheme: <%= scheme.title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .background-image-style {
+            /* Using the generated image URL directly */
+            background-image: url('https://media.istockphoto.com/id/1347264285/photo/businessman-using-tablet-and-touching-on-document-icon-for-approve-and-online-document-concept.webp?a=1&b=1&s=612x612&w=0&k=20&c=A_xXnjOMHhui3NINl7xBDvPz_Zhh5pz80Ix_TZiQa6s='); 
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="text-gray-800 font-sans background-image-style min-h-screen">
+    <div class="min-h-screen bg-gray-900/10 backdrop-blur-sm"> 
+
+        <%- include('../partials/flash') %>
+
+        <main class="container mx-auto px-4 md:px-8 py-12">
+            
+            <h1 class="text-4xl font-extrabold text-white text-center mb-10 border-b-4 border-blue-400/80 pb-4 flex items-center justify-center shadow-lg">
+                <!-- <img src="https://lh3.googleusercontent.com/gg-dl/AJfQ9KRDAz1MaRISc6YPaQbo7c_6IO3gKUTUccAYUXIYNLO5_rX9T583rzC65_4dd1IPUDWd2CfhG0TZMEhO9ELLAw7tnvIIxSUeSnXLBUnrLZRdc9r1RNTxiWk2gz7F2M18WgCu_ZosNjpij-yg-giwRrY6JZ7c2ujYY_FCTkZWzwV-kHyc=s1024-rj" alt="Edit Icon" class="w-10 h-10 mr-4"> -->
+                Edit Scheme: <%= scheme.title %>
+            </h1>
+
+            <div class="max-w-3xl mx-auto bg-white/95 p-8 md:p-10 rounded-2xl shadow-2xl border border-gray-200">
+
+                <form action="/schemes/<%= scheme._id %>?_method=PUT" method="POST" class="space-y-6">
+                    
+                    <div>
+                        <label for="title" class="block text-sm font-semibold text-gray-700 mb-1">Scheme Title</label>
+                        <input type="text" id="title" name="title" value="<%= scheme.title %>" required
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm">
+                    </div>
+                    
+                    <div>
+                        <label for="category" class="block text-sm font-semibold text-gray-700 mb-1">Category</label>
+                        <input type="text" id="category" name="category" value="<%= scheme.category %>" required
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm">
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                        <textarea id="description" name="description" required rows="4"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm"><%= scheme.description %></textarea>
+                    </div>
+
+                    <div>
+                        <label for="benefitAmount" class="block text-sm font-semibold text-gray-700 mb-1">Benefit Amount/Details</label>
+                        <input type="text" id="benefitAmount" name="benefitAmount" value="<%= scheme.benefitAmount %>"
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm">
+                    </div>
+                    
+                    <div>
+                        <label for="eligibility" class="block text-sm font-semibold text-gray-700 mb-1">Eligibility Criteria</label>
+                        <textarea id="eligibility" name="eligibility" rows="3"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm"><%= scheme.eligibility %></textarea>
+                    </div>
+
+                    <div>
+                        <label for="location" class="block text-sm font-semibold text-gray-700 mb-1">Location / State</label>
+                        <input type="text" id="location" name="location" value="<%= scheme.location %>"
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm">
+                    </div>
+
+                    <div>
+                        <label for="infoLink" class="block text-sm font-semibold text-gray-700 mb-1">Official Info Link (URL)</label>
+                        <input type="url" id="infoLink" name="infoLink" value="<%= scheme.infoLink %>"
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm">
+                    </div>
+                    
+                    <div class="flex gap-4 pt-4">
+                        <button type="submit" 
+                                class="flex-grow bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition duration-200 shadow-lg transform hover:scale-[1.01]">
+                            Update Scheme
+                        </button>
+                        
+                        <a href="/schemes/<%= scheme._id %>"
+                           class="flex-grow text-center bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg hover:bg-gray-400 transition duration-200 shadow-md">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
