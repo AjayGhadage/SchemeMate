@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: schememate
+    env: node
+    region: oregon        # or "frankfurt" if you prefer EU
+    branch: main
+    buildCommand: "npm install"
+    startCommand: "node app.js"
+    healthCheckPath: "/"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URL
+        fromSecret: schememate-mongo-url
